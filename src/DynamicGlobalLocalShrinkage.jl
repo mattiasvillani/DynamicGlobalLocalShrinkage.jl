@@ -2,6 +2,7 @@ module DynamicGlobalLocalShrinkage
 
 using Distributions, LinearAlgebra, PDMats, Statistics
 using BandedMatrices, SparseArrays, PolyaGammaSamplers
+using StatsBase
 
 using Colors
 colors = Base.parse.(Colorant,["#6C8EBF", "#c0a34d", "#780000", "#007878",     
@@ -9,11 +10,15 @@ colors = Base.parse.(Colorant,["#6C8EBF", "#c0a34d", "#780000", "#007878",
 "#bb989a", "#98bbb9", "#bf8d6c", "#CBD18F"])
 export colors
 
+include("GibbsDSPcomponents.jl")
+export Updateξ, Updateϕ, Updateμ, UpdateμNC, Updateσ²ₙ
+export Update_h, UpdateMixAlloc
+export SetUpLogChi2Mixture, ScaledInverseChiSq
+
 include("GibbsDSP.jl")
-export ScaledInverseChiSq, Updateξ, Updateϕ, Updateμ, UpdateμNC, Updateσ²ₙ
-export Update_h, Update_h, UpdateMixAlloc, UpdateInitialState
+export update_dsp
 
 include("Utils.jl")
-export quantile
+export quantile_multidim, setOffset!
 
 end

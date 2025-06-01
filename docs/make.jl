@@ -59,6 +59,7 @@ makedocs(;
 
     pages = [
         "Home" => "index.md",
+        "Sampling Updates" => "samplingUpdates.md",
         "Index" => "functionindex.md",
         "Examples" => [
             map(

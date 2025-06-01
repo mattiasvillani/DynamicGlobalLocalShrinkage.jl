@@ -12,6 +12,7 @@ PDMats = "90014a1f-27ba-587c-ab20-58faa44d9150"
 PolyaGammaSamplers = "99ff7fc7-8a0f-4729-8284-81f1989d3fc6"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
+StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 
 [compat]
 BandedMatrices = "1.9.4"
@@ -22,6 +23,7 @@ PDMats = "0.11.35"
 PolyaGammaSamplers = "0.1.0"
 SparseArrays = "1.11.0"
 Statistics = "1.11.1"
+StatsBase = "0.34.5"
 julia = "1.10"
 
 [extras]
