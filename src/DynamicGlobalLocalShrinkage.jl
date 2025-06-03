@@ -16,7 +16,7 @@ export Update_h, UpdateMixAlloc
 export SetUpLogChi2Mixture, ScaledInverseChiSq
 
 include("GibbsDSP.jl")
-export update_dsp
+export update_dsp, update_dsp!
 
 include("Utils.jl")
 export quantile_multidim, setOffset!

@@ -95,8 +95,7 @@ function Update_h(ỹ, m, v, Dᵩ, ξ, ϕ, σ²ₙ, μ)
     invΣᵥ = Diagonal(1 ./ v)
     Qh̃ = PDSparseMat(sparse( invΣᵥ + Dᵩ' * invΣₓ * Dᵩ ))
     lh̃ = invΣᵥ*(ỹ - m .- μ)
-    h̃ = rand(MvNormalCanon(lh̃, Qh̃))
-    return h̃ .+ μ
+    return rand(MvNormalCanon(lh̃, Qh̃)) .+ μ
 end
 
 

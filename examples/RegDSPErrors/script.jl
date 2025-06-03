@@ -22,13 +22,13 @@ gr(legend = :topleft, grid = false, color = colors[1], lw = 1, legendfontsize=12
 
 Random.seed!(123);
 
-# Simulating some data from the model
-T = 100;
+# ### Simulate data from the model
+T = 200;
 βvect = [1,-1];
 X = [ones(T+1) randn(T+1, length(βvect)-1)]; # Design matrix
 α = 1/2;
 ϕ = 0.8;
-μ = -5;
+μ = -4;
 σₙ = 1;
 zdist = LogisticBeta(α, α)*σₙ
 h = zeros(T+1) 
@@ -41,7 +41,7 @@ y = y[2:end];
 X = X[2:end,:];
 h = h[2:end]; 
 
-# Plot the simulated data and the standard deviation
+# ### Plot the simulated data and the standard deviation
 p1 = plot(y, label = "time series", xlabel = "time, "*L"t", ylabel = L"y_t", 
     title = "Simulated y", legend = :topright, color = colors[1], lw = 2)
 p2 = plot(exp.(h/2), label = "standard deviation", xlabel = "time, "*L"t", 
@@ -60,10 +60,10 @@ scatter!(X[:,2], y, markersize = 4, marker_z = 1:T, color = :Blues, markerstroke
     label = "", xlabel = "x", ylabel = "y", title = "Darker color is later in time", colorbar = false);
 p3
 
-# Set up the prior and algorithm settings
+# ### Set up the prior, model and algorithm settings
 priorSettings = (
-    ϕ₀ = 0.5, κ₀ = 0.3, # Prior for ϕ ~ N(ϕ₀, κ₀²)
-    m₀ = -5.0, σ₀ = 3.0,   # Prior for μ ~ N(m₀, σ₀²)
+    ϕ₀ = 0.5, κ₀ = 0.3,     # Prior for ϕ ~ N(ϕ₀, κ₀²)
+    m₀ = -5.0, σ₀ = 3.0,    # Prior for μ ~ N(m₀, σ₀²)
     ν₀ = 3.0, ψ₀ = 1.0,     # Prior for σ²ₙ ~ scaled inverse χ²(ν₀, ψ₀)
 ); 
 modelSettings = (
@@ -72,12 +72,12 @@ modelSettings = (
     updateσₙ = false, # Update σ²ₙ in the Gibbs sampler, or set σₙ = 1
 );
 algoSettings = (
-    nIter = 10000,       # Number of iterations in the Gibbs sampler
-    nBurn = 3000,        # Number of burn-in iterations
-    offsetMethod = eps(),      # Offset for log-volatility
+    nIter = 10000,              # Number of iterations in the Gibbs sampler
+    nBurn = 3000,               # Number of burn-in iterations
+    offsetMethod = eps(),       # Offset for log-volatility
 );
 
-# Make a Gibbs sampler for the time series regression with DSP errors model
+# ### Set up the Gibbs sampler
 function GibbsSamplerRegressionDSPErrors(y, X, priorSettings, modelSettings, algoSettings)
 
     T = length(y)
@@ -89,9 +89,9 @@ function GibbsSamplerRegressionDSPErrors(y, X, priorSettings, modelSettings, alg
     mixLogχ²₁, m, v = SetUpLogChi2Mixture(10) # Only 5 and 10 component supported
 
     ## Initial values
-    p = 1 # only the errors follow a dynamic shrinkage process
-    q = size(X, 2) # Number of β coefficients
-    S = zeros(Int, T, p)  # Mixture allocation for logχ²₁ - this is updated first
+    p = 1                   # only the errors follow a dynamic shrinkage process
+    q = size(X, 2)          # Number of β coefficients
+    S = zeros(Int, T, p)    # Mixture allocation for logχ²₁ - this is updated first
     μ = fill(m₀, p)
     if updateσₙ
         σ²ₙ = fill(ψ₀, p)
@@ -128,9 +128,9 @@ function GibbsSamplerRegressionDSPErrors(y, X, priorSettings, modelSettings, alg
         ## Update the log-volatility evolution
         ν = y - X*βreg
         setOffset!(offset, ν, offsetMethod)
-        S, H, H̃, ξ, ϕ, μ, σ²ₙ = update_dsp(ν, S, H, H̃, ξ, ϕ, μ, σ²ₙ, 
+        update_dsp!(ν, S, H, H̃, ξ, ϕ, μ, σ²ₙ, 
             ϕ₀, κ₀, m₀, σ₀, ν₀, ψ₀, mixLogχ²₁, m, v, Dᵩ, offset, α, β, updateσₙ)
-
+        
         if i > nBurn
             βpost[:, i - nBurn] = βreg
             Hpost[:, i - nBurn] = H[:, 1] # Only one parameter in this case
@@ -144,33 +144,44 @@ function GibbsSamplerRegressionDSPErrors(y, X, priorSettings, modelSettings, alg
 
 end
 
-# Run the Gibbs sampler
+# ### Run the Gibbs sampler
 
 @time βpost, Hpost, ϕpost, σₙpost, μpost = GibbsSamplerRegressionDSPErrors(y, X, 
     priorSettings, modelSettings, algoSettings);
 
-# Plot the posterior distributions of the parameters
-p1 = histogram(βpost[1,:], title = "posterior β₀", color = colors[7],
+# ### Plot the posterior distributions of the static parameters
+p1 = histogram(βpost[1,:], title = "posterior "*L"\beta_0", color = colors[7],
     ylabel = "posterior density", normalize = true)
 vline!([βvect[1]], color = :black, linestyle = :dash, label = "true", lw = 2)
-p2 = histogram(βpost[2,:], title = "posterior β₁", color = colors[7], 
+p2 = histogram(βpost[2,:], title = "posterior "*L"\beta_1", color = colors[7], 
     ylabel = "posterior density", normalize = true)
 vline!([βvect[2]], color = :black, linestyle = :dash, label = "true", lw = 2)
-p3 = histogram(μpost[:], title = "posterior μ", color = colors[7], 
+p3 = histogram(μpost[:], title = "posterior "*L"\mu", color = colors[7], 
     ylabel = "posterior density", normalize = true)
 vline!([μ], color = :black, linestyle = :dash, label = "true", lw = 2)
-p4 = histogram(ϕpost[:], title = "posterior  ϕ", color = colors[7], 
+p4 = histogram(ϕpost[:], title = "posterior "*L"\phi", color = colors[7], 
 ylabel = "posterior density", normalize = true)
 vline!([ϕ], color = :black, linestyle = :dash, label = "true", lw = 2)
 plot(p1, p2, p3, p4, layout = (2,2), size = (800,400), legend = nothing)
 
-# Plot the posterior distributions of standard deviation of innovations
+# and the posterior distribution of the log-volatility evolution
 stdev_quantiles =  quantile_multidim(exp.(Hpost/2), [0.05, 0.5, 0.9]; dims = 2)
-plot(stdev_quantiles[:,2], xlabel = "time", title = "Stdev innovations - "*L"\exp(h_t/2)", 
-    color = colors[3], label = "median", lw = 2)
+p1 = plot(stdev_quantiles[:,2], xlabel = "time", 
+    title = "Stdev innovations - "*L"\exp(h_t/2)", color = colors[3], label = "median", 
+    lw = 2)
 plot!(stdev_quantiles[:,2], label = "", fillrange = stdev_quantiles[:,1], lw = 0, 
-    fillalpha = 0.5, color =:lightgray)
+    fillalpha = 0.3, color =:gray)
 plot!(stdev_quantiles[:,2], xlabel = "time", label = "95% C.I.", 
-    fillrange = stdev_quantiles[:,3], lw = 0, fillalpha = 0.5, color =:lightgray)
+    fillrange = stdev_quantiles[:,3], lw = 0, fillalpha = 0.3, color =:gray)
 plot!(exp.(h/2), color = colors[1], label = "true", lw = 2)
 
+stdev_quantiles =  quantile_multidim(Hpost, [0.05, 0.5, 0.9]; dims = 2)
+p2 = plot(stdev_quantiles[:,2], xlabel = "time", title = L"h_t", 
+    color = colors[3], label = "", lw = 2)
+plot!(stdev_quantiles[:,2], label = "", fillrange = stdev_quantiles[:,1], lw = 0, 
+    fillalpha = 0.3, color =:gray)
+plot!(stdev_quantiles[:,2], xlabel = "time", label = "", 
+    fillrange = stdev_quantiles[:,3], lw = 0, fillalpha = 0.3, color =:gray)
+plot!(h, color = colors[1], label = "", lw = 2)
+
+plot(p1, p2, layout = (1,2), size = (800,400), legend = :topleft, margin = 3mm)
