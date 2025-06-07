@@ -119,6 +119,24 @@ function UpdateMixAlloc(ỹ, h, mixDist)
         sum(repeat(rand(T), 1, nComp) .< cumsum(postDist, dims = 2), dims = 2) .+ 1
 end
 
+""" 
+    UpdateMixAlloc(ỹ, h, mixDist) 
+
+Update the mixture component allocation for the log-volatility series
+""" 
+function UpdateMixAlloc!(ỹ, h, mixDist, postDist)
+    T = length(ỹ)
+    nComp = size(postDist, 2)
+    for (i,component) in enumerate(mixDist.components)
+        postDist[:,i] = logpdf.(component, ỹ - h)
+    end
+    postDist = exp.(postDist .- maximum(postDist, dims = 2)) .* mixDist.prior.p' 
+    postDist = postDist ./ sum(postDist, dims=2)
+
+    return nComp .- 
+        sum(repeat(rand(T), 1, nComp) .< cumsum(postDist, dims = 2), dims = 2) .+ 1
+end
+
 
 """ 
     setUpLogChi2Mixture(nComp, df) 
@@ -160,9 +178,3 @@ function SetUpLogChi2Mixture(nComp, df = 1)
     error("Only 5 or 10 components are implemented")
 
 end
-
-
-# Some small helper function used in the Gibbs sampler
-
-# Function for converting log volatilities to Cov matrices used in the filters
-LogVol2Covs(H) = PDMat.([diagm(exp.(H[t,:])) for t in 1:size(H,1)])

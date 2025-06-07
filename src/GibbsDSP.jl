@@ -17,14 +17,14 @@ The usual square-and-log trick in stochastic volatility models is used to turn h
 ỹₜ = log(νₜ² + offset) = hₜ + qₜ, where qₜ ~ log χ²₁, which is approximated by a mixture of normals distribution with mixture allocation given by the T × p matrix S. The means and variances of the mixture components are given by the vectors m and v, respectively.
 """ 
 function update_dsp!(ν, S, H, H̃, ξ, ϕ, μ, σ²ₙ, ϕ₀, κ₀, m₀, σ₀, ν₀, ψ₀, 
-    mixLogχ²₁, m, v, Dᵩ, offset = eps(), α = 1/2, β = 1/2, updateσₙ = false)
+    mixLogχ²₁, m, v, postDist, Dᵩ, offset = eps(), α = 1/2, β = 1/2, updateσₙ = false)
 
-    p = size(ν, 2) 
-    Ỹ = log.(ν.^2 .+ offset) # Ỹ = [ỹ₁, ỹ₂,..., ỹₚ] is T × p
+    p = size(ν, 2)
+    Ỹ = log.(ν.^2 .+ offset) # Ỹ = [ỹ₁, ỹ₂,..., ỹₚ] is T × p 
     for k in 1:p 
 
         # Update mixture allocation for log χ²₁ distribution
-        S[:,k] = UpdateMixAlloc(Ỹ[:,k], H̃[:,k] .+ μ[k], mixLogχ²₁)
+        S[:,k] = UpdateMixAlloc!(Ỹ[:,k], H̃[:,k] .+ μ[k], mixLogχ²₁, postDist)
 
         # Update h₁, h₂, ..., hₜ using MvNormal draw with tridiag precision matrix
         H[:,k] = Update_h(Ỹ[:,k], m[S[:,k]], v[S[:,k]], Dᵩ, ξ[:,k], ϕ[k], σ²ₙ[k], μ[k])

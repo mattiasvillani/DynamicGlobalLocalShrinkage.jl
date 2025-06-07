@@ -3,11 +3,12 @@ Updateϕ
 SetUpLogChi2Mixture 
 Update_h 
 Updateμ 
+UpdateMixAlloc!
 UpdateMixAlloc
 Updateξ 
 UpdateμNC
 Updateσ²ₙ
 quantile_multidim
 ScaledInverseChiSq
-update_dsp
+update_dsp!
 ```

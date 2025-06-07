@@ -15,3 +15,6 @@ function setOffset!(offset, ν, offSetMethod)
         end
     end
 end
+
+# Helper function to convert log-volatility evolution to covariance matrices
+LogVol2Covs(H) = PDMat.([diagm(exp.(H[t,:])) for t in 1:size(H,1)]) 
