@@ -53,6 +53,7 @@ makedocs(;
         canonical="https://mattiasvillani.github.io/DynamicGlobalLocalShrinkage.jl",
         edit_link="main",
         assets=String[],
+        size_threshold_warn = 1000 * 2^10,
         size_threshold = 1500 * 2^10, # 1000 KiB determines the maximal html size in KiB
     ),
     
