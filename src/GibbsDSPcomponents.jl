@@ -1,9 +1,3 @@
-""" 
-    ScaledInverseChiSq(ν,τ²) 
-
-Scaled inverse chi-squared distribution with parameters `ν` and `τ²`.
-""" 
-ScaledInverseChiSq(ν,τ²) = InverseGamma(ν/2,ν*τ²/2)
 
 
 """ 
@@ -147,9 +141,9 @@ Sets up a Normal mixture to approximate the distribution of the log χ²₁ rand
 ```julia-repl
 julia> histogram(log.(rand(Chisq(1),10000)), normalize = true, fillcolor = :lightgray, linecolor = :white, lw = 0.5, label = "simulated")
 julia> mix = SetUpLogChi2Mixture(10, 1) # Omori et al (2007) 10-comp
-julia> plot!(-10:0.01:4, pdf.(mix, -10:0.01:4), color = :black, label = "10-comp")
+julia> plot!(-20:0.01:4, pdf.(mix.dist, -20:0.01:4), color = :black, label = "10-comp")
 julia> mix = SetUpLogChi2Mixture(5, 1) # Carter-Kohn 5-component
-julia> plot!(-10:0.01:4, pdf.(mix, -10:0.01:4), color = :cornflowerblue, label = "5-comp")
+julia> plot!(-20:0.01:4, pdf.(mix.dist, -20:0.01:4), color = :cornflowerblue, label = "5-comp")
 ```
 """ 
 function SetUpLogChi2Mixture(nComp, df = 1)
@@ -157,13 +151,16 @@ function SetUpLogChi2Mixture(nComp, df = 1)
     if df !== 1
         error("Only df = 1 is implemented")
     end
+    if !(nComp == 5 || nComp == 10)
+        error("Only 5 or 10 components are implemented")
+    end
 
     if nComp == 5 # Carter-Kohn 5-comp from JRSS B paper on spectral density estimation
         ω = [0.13, 0.16, 0.23, 0.22, 0.25]
         ω = ω ./ sum(ω)
         m = [-4.63, -2.87, -1.44, -.33,  0.76]  
         v = [8.75, 1.95, 0.88, 0.45, 0.41]
-        return MixtureModel(Normal.(m, sqrt.(v)), ω), m, v
+        dist = MixtureModel(Normal.(m, sqrt.(v)), ω)
     end
     if nComp == 10 # Omori et al (2007) 10-comp (used in stochvol package in R)
         ω = [0.00609, 0.04775, 0.13057, 0.20674, 0.22715, 
@@ -172,9 +169,9 @@ function SetUpLogChi2Mixture(nComp, df = 1)
             -1.97278, -3.46788, -5.55246, -8.68384, -14.6500]
         v =  [0.11265, 0.17788, 0.26768, 0.40611, 0.62699, 
             0.98583, 1.57469, 2.54498, 4.16591, 7.33342]
-        return MixtureModel(Normal.(m, sqrt.(v)), ω), m, v
+        dist = MixtureModel(Normal.(m, sqrt.(v)), ω)
     end
 
-    error("Only 5 or 10 components are implemented")
+    return (dist = dist, m = m, v = v)
 
 end

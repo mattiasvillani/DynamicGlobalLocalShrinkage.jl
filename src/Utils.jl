@@ -1,10 +1,18 @@
 
 """ 
-    quantile(A, p; dims, kwargs...)
+    ScaledInverseChiSq(ν,τ²) 
+
+Scaled inverse chi-squared distribution with parameters `ν` and `τ²`.
+""" 
+ScaledInverseChiSq(ν,τ²) = InverseGamma(ν/2,ν*τ²/2)
+
+""" 
+    quantile_multidim(A, p; dims, kwargs...)
 
 Compute the quantiles `p` of a multidimensional array `A` along specified dimensions `dims`.
 """ 
-quantile_multidim(A, p; dims, kwargs...) = mapslices(x -> quantile(x, p; kwargs...), A; dims)
+quantile_multidim(A, p; dims = 1, kwargs...) = mapslices(x -> quantile(x, p; 
+    kwargs...), A; dims)
 
 # Set the offset
 function setOffset!(offset, ν, offSetMethod)

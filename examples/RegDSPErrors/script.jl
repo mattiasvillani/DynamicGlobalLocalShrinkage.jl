@@ -90,7 +90,7 @@ function GibbsSamplerRegressionDSPErrors(y, X, priorSettings, modelSettings, alg
     α, β, updateσₙ, nMixComp = modelSettings
 
     ## Approximate the log χ²₁ distribution with a mixture of normals
-    mixLogχ²₁, m, v = SetUpLogChi2Mixture(nMixComp) # Only 5 and 10 component supported
+    mixture = SetUpLogChi2Mixture(nMixComp) # Only 5 and 10 component supported
 
     ## Initial values
     p = 1                   # only the errors follow a dynamic shrinkage process
@@ -121,7 +121,7 @@ function GibbsSamplerRegressionDSPErrors(y, X, priorSettings, modelSettings, alg
     else
         offset = offsetMethod
     end 
-    postDist = zeros(T, nMixComp) # Set up storage for posterior of the mixture allocation
+    P = zeros(T, nMixComp) # Set up storage for posterior of the mixture allocation
     for i in 1:(nBurn + nIter)
 
         ## Draw regression coefficients using Bayesian WLS (uniform prior)
@@ -133,8 +133,7 @@ function GibbsSamplerRegressionDSPErrors(y, X, priorSettings, modelSettings, alg
         ## Update the log-volatility evolution
         ν = y - X*βreg
         setOffset!(offset, ν, offsetMethod)
-        update_dsp!(ν, S, H, H̃, ξ, ϕ, μ, σ²ₙ, 
-            ϕ₀, κ₀, m₀, σ₀, ν₀, ψ₀, mixLogχ²₁, m, v, postDist, Dᵩ, offset, α, β, updateσₙ)
+        update_dsp!(ν, S, P, H, H̃, ξ, ϕ, μ, σ²ₙ, priorSettings, mixture, Dᵩ)
         
         if i > nBurn
             βpost[:, i - nBurn] = βreg

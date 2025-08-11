@@ -101,7 +101,7 @@ function GibbsSamplerTvRegDSP(y, X, priorSettings, modelSettings, algoSettings)
     α, β, updateσₙ, nMixComp = modelSettings
 
     ## Approximate the log χ²₁ distribution with a mixture of normals
-    mixLogχ²₁, m, v = SetUpLogChi2Mixture(nMixComp) # Only 5 and 10 component supported
+    mixture = SetUpLogChi2Mixture(nMixComp) # Only 5 and 10 component supported
 
     ## Initial values
     p = size(X,2)           # only the errors follow a dynamic shrinkage process
@@ -133,7 +133,8 @@ function GibbsSamplerTvRegDSP(y, X, priorSettings, modelSettings, algoSettings)
     else
         offset = offsetMethod
     end 
-    postDist = zeros(T, nMixComp) 
+    P = zeros(T, nMixComp) # storage for mixture component probabilities
+
 
     ## Set up state-space model
     Σₑ = σ²ₑ
@@ -159,8 +160,7 @@ function GibbsSamplerTvRegDSP(y, X, priorSettings, modelSettings, algoSettings)
         ## Update the log-volatility evolution
         ν = diff(θ, dims = 1)
         setOffset!(offset, ν, offsetMethod)
-        update_dsp!(ν, S, H, H̃, ξ, ϕ, μ, σ²ₙ, 
-            ϕ₀, κ₀, m₀, σ₀, ν₀, ψ₀, mixLogχ²₁, m, v, postDist, Dᵩ, offset, α, β, updateσₙ)
+        update_dsp!(ν, S, P, H, H̃, ξ, ϕ, μ, σ²ₙ, priorSettings, mixture, Dᵩ)
         
         if i > nBurn
             θpost[:, :, i - nBurn] = θ
