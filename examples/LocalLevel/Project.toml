@@ -11,3 +11,8 @@ Measures = "442fdcdd-2543-5da2-b0f3-8c86c306513e"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 SMCsamplers = "2328efba-24c2-4a10-a32f-a74f69d05fca"
+
+[sources]
+DynamicGlobalLocalShrinkage = {path = "/home/mv/Dropbox/Julia/dev/DynamicGlobalLocalShrinkage/docs/.."}
+LogisticBetaDistribution = {rev = "main", url = "git@github.com:mattiasvillani/LogisticBetaDistribution.jl.git"}
+SMCsamplers = {rev = "main", url = "git@github.com:mattiasvillani/SMCsamplers.jl.git"}
