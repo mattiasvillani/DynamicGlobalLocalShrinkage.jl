@@ -16,7 +16,7 @@ StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 Utils = "a6a4a4df-ba9f-45e9-bafc-bec3296762b9"
 
 [sources]
-Utils = {rev = "main", url = "git@github.com:mattiasvillani/Utils.jl.git"}
+Utils = {rev = "main", url = "https://github.com/mattiasvillani/Utils.jl.git"}
 
 [compat]
 BandedMatrices = "1.9.4"

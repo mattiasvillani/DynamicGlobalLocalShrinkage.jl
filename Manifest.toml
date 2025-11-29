@@ -1623,9 +1623,9 @@ version = "0.2.0"
 
 [[deps.Utils]]
 deps = ["AdvancedMH", "ColorSchemes", "DataFrames", "Distances", "Distributions", "ForwardDiff", "KernelDensity", "LaTeXStrings", "LinearAlgebra", "Loess", "LogExpFunctions", "Optim", "PDMats", "Plots", "ProgressMeter", "Random", "SpecialFunctions", "Statistics", "StatsPlots"]
-git-tree-sha1 = "4178b847356b2459555099b1b91b038fbc09bd39"
+git-tree-sha1 = "f5232af6a438670cf164d80b74406c52458313bf"
 repo-rev = "main"
-repo-url = "git@github.com:mattiasvillani/Utils.jl.git"
+repo-url = "https://github.com/mattiasvillani/Utils.jl.git"
 uuid = "a6a4a4df-ba9f-45e9-bafc-bec3296762b9"
 version = "0.1.0"
 
