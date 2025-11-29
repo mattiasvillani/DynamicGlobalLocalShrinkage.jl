@@ -1,7 +1,7 @@
 name = "DynamicGlobalLocalShrinkage"
 uuid = "95f0ba86-bb51-4e4e-bc21-89dc4565d801"
-authors = ["Mattias Villani"]
 version = "1.0.0-DEV"
+authors = ["Mattias Villani"]
 
 [deps]
 BandedMatrices = "aae01518-5342-5314-be14-df237901396f"
@@ -13,6 +13,10 @@ PolyaGammaSamplers = "99ff7fc7-8a0f-4729-8284-81f1989d3fc6"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
+Utils = "a6a4a4df-ba9f-45e9-bafc-bec3296762b9"
+
+[sources]
+Utils = {rev = "main", url = "git@github.com:mattiasvillani/Utils.jl.git"}
 
 [compat]
 BandedMatrices = "1.9.4"
@@ -24,6 +28,7 @@ PolyaGammaSamplers = "0.1.0"
 SparseArrays = "1.11.0"
 Statistics = "1.11.1"
 StatsBase = "0.34.5"
+Utils = "0.1.0"
 julia = "1.10"
 
 [extras]

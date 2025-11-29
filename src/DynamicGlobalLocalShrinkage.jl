@@ -3,6 +3,7 @@ module DynamicGlobalLocalShrinkage
 using Distributions, LinearAlgebra, PDMats, Statistics
 using BandedMatrices, SparseArrays, PolyaGammaSamplers
 using StatsBase
+using Utils: quantile_multidim
 
 include("GibbsDSPcomponents.jl")
 export Updateξ, Updateϕ, Updateμ, UpdateμNC, Updateσ²ₙ
@@ -13,6 +14,6 @@ include("GibbsDSP.jl")
 export update_dsp!
 
 include("Utils.jl")
-export ScaledInverseChiSq, quantile_multidim, setOffset!, LogVol2Covs
+export setOffset!, LogVol2Covs
 
 end
