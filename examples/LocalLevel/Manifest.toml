@@ -552,7 +552,7 @@ version = "1.7.0"
 
 [[deps.DynamicGlobalLocalShrinkage]]
 deps = ["BandedMatrices", "Colors", "Distributions", "LinearAlgebra", "PDMats", "PolyaGammaSamplers", "SparseArrays", "Statistics", "StatsBase", "Utils"]
-path = "/home/mv/Dropbox/Julia/dev/DynamicGlobalLocalShrinkage/docs/.."
+path = "../.."
 uuid = "95f0ba86-bb51-4e4e-bc21-89dc4565d801"
 version = "1.0.0-DEV"
 
@@ -1122,7 +1122,7 @@ version = "1.2.0"
 deps = ["ColorSchemes", "Distributions", "Documenter", "DocumenterTools", "LaTeXStrings", "LogExpFunctions", "Plots", "Random", "Revise", "SpecialFunctions", "Statistics", "StatsBase"]
 git-tree-sha1 = "bd3ef23fd2f170949414f31ca107d1da90c33322"
 repo-rev = "main"
-repo-url = "git@github.com:mattiasvillani/LogisticBetaDistribution.jl.git"
+repo-url = "https://github.com/mattiasvillani/LogisticBetaDistribution.jl.git"
 uuid = "59b8652b-d2f9-4a66-a653-7a5f669fef35"
 version = "1.0.0"
 
