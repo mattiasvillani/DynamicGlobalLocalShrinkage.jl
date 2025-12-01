@@ -16,11 +16,10 @@ using Plots, Distributions, LaTeXStrings, Random, Measures, LinearAlgebra, Bande
 using ColorSchemes
 using SMCsamplers, LogisticBetaDistribution
 using DynamicGlobalLocalShrinkage
+using Utils: quantile_multidim, ScaledInverseChiSq
+using Utils: mvcolors as colors
 
-cols = ["#6C8EBF", "#c0a34d", "#780000", "#007878",     
-    "#b5c6df","#eadaaa","#AE6666", "#4CA0A0","#bf9d6c", "#3A6B35"]
-
-gr(legend = :topleft, grid = false, color = cols[1], lw = 1, legendfontsize=12,
+gr(legend = :topleft, grid = false, color = colors[1], lw = 1, legendfontsize=12,
     xtickfontsize=10, ytickfontsize=10, xguidefontsize=12, yguidefontsize=12,
     titlefontsize = 14, markerstrokecolor = :auto)
 
@@ -54,7 +53,7 @@ plt = []
 for j = 1:p
     push!(plt, plot(θ[:,j], label = L"\theta_{%$(j-1)}", xlabel = "time, "*L"t", 
         ylabel = L"\theta_{%$(j-1)}", title = "Path of "*L"\theta_{%$(j-1)}", 
-        color = cols[j], lw = 2))
+        color = colors[j], lw = 2))
 end
 plot(plt..., layout = (p,1), size = (800, 400), xguidefontsize = 12, 
     yguidefontsize = 12, titlefontsize=12, legend = nothing, margin = 5mm) 
@@ -185,19 +184,19 @@ end;
 p1 = []
 for j = 1:p
     push!(p1, histogram(μpost[j,:], title = "posterior "*L"\mu_{%$(j)}", 
-        color = cols[7], ylabel = "posterior density", normalize = true))
+        color = colors[7], ylabel = "posterior density", normalize = true))
 end
 plot(p1..., layout = (1,p), size = (800,400), legend = nothing)
 
 p2 = []
 for j = 1:p
     push!(p2, histogram(ϕpost[j,:], title = "posterior "*L"\phi_{%$(j)}", 
-        color = cols[8], ylabel = "posterior density", normalize = true))
+        color = colors[8], ylabel = "posterior density", normalize = true))
 end
 plot(p2..., layout = (1,p), size = (800,400), legend = nothing)
 
 p3 = histogram(sqrt.(σ²ₑpost), title = "posterior "*L"\sigma_\varepsilon", 
-    color = cols[9], ylabel = "posterior density", normalize = true)
+    color = colors[9], ylabel = "posterior density", normalize = true)
 vline!([sqrt(σ²ₑ)], color = :black, linestyle = :dash, label = "true", lw = 2)
 
 plot(p1..., p2..., p3, layout = (3,p), size = (800,600), margin = 5mm, legend = nothing)
@@ -209,12 +208,12 @@ for j = 1:p
    
     stdev_quantiles =  quantile_multidim(θpost[:,j,:], [0.05, 0.5, 0.9]; dims = 2)
     p2 = plot(stdev_quantiles[:,2], xlabel = "time", title = L"\theta_{t%$(j-1)}", 
-        color = cols[3], label = (j==1) ? "median" : "", lw = 2)
+        color = colors[3], label = (j==1) ? "median" : "", lw = 2)
     plot!(stdev_quantiles[:,2], label = "", fillrange = stdev_quantiles[:,1], lw = 0, 
         fillalpha = 0.3, color =:gray)
     plot!(stdev_quantiles[:,2], xlabel = "time", label = (j==1) ? "95% C.I." : "", 
         fillrange = stdev_quantiles[:,3], lw = 0, fillalpha = 0.3, color =:gray)
-    plot!(θ[:,j], color = cols[1], label = (j==1) ? "true" : "", lw = 2)
+    plot!(θ[:,j], color = colors[1], label = (j==1) ? "true" : "", lw = 2)
 
     push!(plt, p2)
 
@@ -227,7 +226,7 @@ for j = 1:p
    
     stdev_quantiles =  quantile_multidim(Hpost[:,j,:], [0.05, 0.5, 0.9]; dims = 2)
     p2 = plot(stdev_quantiles[:,2], xlabel = "time", title = L"h_{t%$j}", 
-        color = cols[3], label = "", lw = 2)
+        color = colors[3], label = "", lw = 2)
     plot!(stdev_quantiles[:,2], label = "", fillrange = stdev_quantiles[:,1], lw = 0, 
         fillalpha = 0.3, color =:gray)
     plot!(stdev_quantiles[:,2], xlabel = "time", label = "", 

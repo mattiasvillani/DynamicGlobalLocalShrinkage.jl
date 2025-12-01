@@ -16,11 +16,10 @@ using Plots, Distributions, LaTeXStrings, Random, Measures, LinearAlgebra, Bande
 using ColorSchemes
 using SMCsamplers, LogisticBetaDistribution
 using DynamicGlobalLocalShrinkage
+using Utils: quantile_multidim, ScaledInverseChiSq
+using Utils: mvcolors as colors
 
-cols = ["#6C8EBF", "#c0a34d", "#780000", "#007878",     
-    "#b5c6df","#eadaaa","#AE6666", "#4CA0A0","#bf9d6c", "#3A6B35"]
-
-gr(legend = :topleft, grid = false, color = cols[1], lw = 1, legendfontsize=12,
+gr(legend = :topleft, grid = false, color = colors[1], lw = 1, legendfontsize=12,
     xtickfontsize=10, ytickfontsize=10, xguidefontsize=12, yguidefontsize=12,
     titlefontsize = 14, markerstrokecolor = :auto)
 
@@ -49,11 +48,11 @@ y = y[2:end];
 
 # ### Plot the simulated data and the standard deviation
 p1 = plot(y, label = "time series", xlabel = "time, "*L"t", ylabel = L"y_t", 
-    title = "Simulated y", legend = :topright, color = cols[1], lw = 2)
-plot!(θ, label = "local level", color = cols[3], lw = 2)
+    title = "Simulated y", legend = :topright, color = colors[1], lw = 2)
+plot!(θ, label = "local level", color = colors[3], lw = 2)
 p2 = plot(exp.(h/2), label = "standard deviation", xlabel = "time, "*L"t", 
     ylabel = L"\exp(h_t/2)", title = "Standard deviation, "*L"\exp(h_t/2)", 
-    color = cols[2], lw = 2);
+    color = colors[2], lw = 2);
 plot(p1, p2, layout = (1,2), size = (800, 300), xguidefontsize = 12, 
     yguidefontsize = 12, titlefontsize=12, legend = nothing, margin = 5mm, lw = 2)
 
@@ -164,47 +163,47 @@ end;
     priorSettings, modelSettings, algoSettings);
 
 # ### Plot the posterior distributions of the static parameters
-p1 = histogram(μpost[:], title = "posterior "*L"\mu", color = cols[7], 
+p1 = histogram(μpost[:], title = "posterior "*L"\mu", color = colors[7], 
     ylabel = "posterior density", normalize = true)
 vline!([μ], color = :black, linestyle = :dash, label = "true", lw = 2)
-p2 = histogram(ϕpost[:], title = "posterior "*L"\phi", color = cols[7], 
+p2 = histogram(ϕpost[:], title = "posterior "*L"\phi", color = colors[7], 
     ylabel = "posterior density", normalize = true)
 vline!([ϕ], color = :black, linestyle = :dash, label = "true", lw = 2)
 p3 = histogram(sqrt.(σ²ₑpost), title = "posterior "*L"\sigma_\varepsilon", 
-    color = cols[7], ylabel = "posterior density", normalize = true)
+    color = colors[7], ylabel = "posterior density", normalize = true)
 vline!([sqrt(σ²ₑ)], color = :black, linestyle = :dash, label = "true", lw = 2)
 plot(p1, p2, p3, layout = (1,3), size = (800,400), legend = nothing)
 
 # ### Plot the posterior distribution of the local level evolution
 θ_quantiles = quantile_multidim(θpost, [0.05, 0.5, 0.9]; dims = 2)
 p1 = plot(θ_quantiles[:,2], xlabel = "time", 
-    title = "Local level evolution, "*L"\theta_t", color = cols[3], label = "median", 
+    title = "Local level evolution, "*L"\theta_t", color = colors[3], label = "median", 
     lw = 2, legend = :bottomright)
 plot!(θ_quantiles[:,2], label = "", fillrange = θ_quantiles[:,1], lw = 0,
     fillalpha = 0.3, color =:gray)
 plot!(θ_quantiles[:,2], xlabel = "time", label = "95% C.I.",
     fillrange = θ_quantiles[:,3], lw = 0, fillalpha = 0.3, color =:gray)
-plot!(θ, color = cols[1], label = "true", lw = 2)
+plot!(θ, color = colors[1], label = "true", lw = 2)
 
 # ### Plot the posterior distribution of the log-volatility evolution
 stdev_quantiles =  quantile_multidim(exp.(Hpost/2), [0.05, 0.5, 0.9]; dims = 2)
 p1 = plot(stdev_quantiles[:,2], xlabel = "time", 
-    title = "Stdev innovations - "*L"\exp(h_t/2)", color = cols[3], label = "median", 
+    title = "Stdev innovations - "*L"\exp(h_t/2)", color = colors[3], label = "median", 
     lw = 2)
 plot!(stdev_quantiles[:,2], label = "", fillrange = stdev_quantiles[:,1], lw = 0, 
     fillalpha = 0.3, color =:gray)
 plot!(stdev_quantiles[:,2], xlabel = "time", label = "95% C.I.", 
     fillrange = stdev_quantiles[:,3], lw = 0, fillalpha = 0.3, color =:gray)
-plot!(exp.(h/2), color = cols[1], label = "true", lw = 2)
+plot!(exp.(h/2), color = colors[1], label = "true", lw = 2)
 
 stdev_quantiles =  quantile_multidim(Hpost, [0.05, 0.5, 0.9]; dims = 2)
 p2 = plot(stdev_quantiles[:,2], xlabel = "time", title = L"h_t", 
-    color = cols[3], label = "", lw = 2)
+    color = colors[3], label = "", lw = 2)
 plot!(stdev_quantiles[:,2], label = "", fillrange = stdev_quantiles[:,1], lw = 0, 
     fillalpha = 0.3, color =:gray)
 plot!(stdev_quantiles[:,2], xlabel = "time", label = "", 
     fillrange = stdev_quantiles[:,3], lw = 0, fillalpha = 0.3, color =:gray)
-plot!(h, color = cols[1], label = "", lw = 2)
+plot!(h, color = colors[1], label = "", lw = 2)
 
 plot(p1, p2, layout = (1,2), size = (800,400), legend = :topleft, margin = 3mm)
 
