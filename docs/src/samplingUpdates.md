@@ -8,6 +8,5 @@ UpdateMixAlloc
 Updateξ 
 UpdateμNC
 Updateσ²ₙ
-ScaledInverseChiSq
 update_dsp!
 ```
