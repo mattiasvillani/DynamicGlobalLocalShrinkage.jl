@@ -14,7 +14,7 @@ SMCsamplers = "2328efba-24c2-4a10-a32f-a74f69d05fca"
 Utils = "a6a4a4df-ba9f-45e9-bafc-bec3296762b9"
 
 [sources]
-DynamicGlobalLocalShrinkage = {path = "/home/mv/Dropbox/Julia/dev/DynamicGlobalLocalShrinkage/docs/.."}
+DynamicGlobalLocalShrinkage = {path = "/../.."}
 LogisticBetaDistribution = {rev = "main", url = "git@github.com:mattiasvillani/LogisticBetaDistribution.jl.git"}
 SMCsamplers = {path = "/home/mv/.julia/dev/SMCsamplers"}
 Utils = {rev = "main", url = "https://github.com/mattiasvillani/Utils.jl.git"}
